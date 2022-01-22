@@ -1,6 +1,11 @@
 import requests, json, datetime
+#from flask import Flask
 
 from parse import simplify_data
+#from flask_cors import CORS
+
+#app = Flask(__name__)
+#CORS(app)
 
 locations = ["Wiley", "Ford", "Hillenbrand", "The Gathering Place", "Earhart", "Windsor"]
 url = "http://api.hfs.purdue.edu/menus/v2/locations/"

@@ -34,21 +34,50 @@ class DiningRatingHist(db.Model):
     
 class DiningRatingHistSchema(ma.Schema):
     class Meta:
-        fields = ('id', 'court', 'food', 'ratings', 'ratings_count')
+        fields = ('id', 'court', 'food', 'ratings', 'ratings_count', 'picture')
 
-def populate_court_current_date(date, court, meal_time, foodList):
-    listOfFood = []
-    for food in foodList:
-        id = court + "." + food
-        foodRatings = DiningRatingHist.query.get(id)
+
+dining_court_rating_schema = DiningRatingHistSchema()
+dining_courts_rating_schema = DiningRatingHistSchema(many=True)
+
+def populate_court_current_date(date, court, food, meal_time):
+
+    id = court + "." + food
+    foodRatings = DiningRatingHist.query.get(id)
+    foodRatings = dining_court_rating_schema.dump(foodRatings)
+
+    if foodRatings:
+        print("Some", foodRatings)
         foodRatings = {
             "date": date,
-            "meal_time": meal_time
+            "meal_time": meal_time,
             **foodRatings
         }
-        listOfFood.append(foodRatings)
+        del foodRatings['id']
+    else:
+        # foodRatings = DiningRatingHist()
+        foodRatings = {
+            "date": date,
+            "meal_time": meal_time,
+            "court": court,
+            "food": food,
+            "ratings": 0.0,
+            "ratings_count": 0,
+            "picture": ""
+        }
 
-    return listOfFood
+    return foodRatings
+
+
+def populate_db_ratings(court, food, ratings, ratings_count, picture):
+    
+    id = court + '.' + food
+    if not DiningRatingHist.query.get(id):
+        diningRating = DiningRatingHist(court, food, ratings, ratings_count, picture)
+        db.session.add(diningRating)
+        db.session.commit()
+
+    return
 
 
 
