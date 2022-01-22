@@ -1,0 +1,27 @@
+[
+    {
+        "date": "01-02-2020",
+        "court": "wiley",
+        "food": "fries",
+        "meal_time": "dinner",
+        "ratings": 1.0,
+        "ratings_count": 80,
+        "picture": ""
+    },
+    {
+        "date": "01-02-2020",
+        "court": "wiley",
+        "food": "friesokay",
+        "meal_time": "dinner",
+        "ratings": 1.0,
+        "picture": ""
+    },
+    {
+        "date": "01-03-2020",
+        "court": "earhart",
+        "food": "here",
+        "meal_time": "breakfast",
+        "ratings": 2.0,
+        "picture": ""
+    }
+]
