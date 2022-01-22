@@ -7,7 +7,7 @@ class FoodInfo extends Component {
       <React.Fragment>
         <div className="card border-secondary" style={{ borderRadius: "30px" }}>
           <div className="card-body">
-            <img src="" class="card-img-top" alt="..." />
+            <img src="" className="card-img-top" alt="..." />
             <h6 className="card-text">Popcorn Shrimp</h6>
             <p className="card-text">3.2</p>
           </div>
