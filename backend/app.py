@@ -51,12 +51,31 @@ def get_specific_day_foodList(date_query, dining_court):
     reformatted_diningday = []
     for data_food in dining_courts_timeline_schema.dump(diningday):
         
-        print(data_food)
         val = db_manage.populate_court_current_date(
             data_food['date'], data_food['court'], data_food['food'], data_food['meal_time']
         )
         
         reformatted_diningday.append(val)
+            
+    results = dining_courts_timeline_schema.dump(reformatted_diningday)
+
+    return jsonify(results)
+
+@app.route('/get/<date_query>/<dining_court>/top3', methods = ['GET'])
+def get_specific_day_foodList_top3(date_query, dining_court):
+    date_query = datetime.datetime.strptime(date_query, "%m-%d-%Y")
+    diningday = DiningCourtTimeline.query.filter_by(date=date_query, court=dining_court)
+
+    reformatted_diningday = []
+    for data_food in dining_courts_timeline_schema.dump(diningday):
+        
+        val = db_manage.populate_court_current_date(
+            data_food['date'], data_food['court'], data_food['food'], data_food['meal_time']
+        )
+        
+        reformatted_diningday.append(val)
+
+    reformatted_diningday = sorted(reformatted_diningday, key = lambda i: i['ratings'], reverse=True)[:3]
             
     results = dining_courts_timeline_schema.dump(reformatted_diningday)
 

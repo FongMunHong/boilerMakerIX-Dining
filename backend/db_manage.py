@@ -47,7 +47,6 @@ def populate_court_current_date(date, court, food, meal_time):
     foodRatings = dining_court_rating_schema.dump(foodRatings)
 
     if foodRatings:
-        print("Some", foodRatings)
         foodRatings = {
             "date": date,
             "meal_time": meal_time,
