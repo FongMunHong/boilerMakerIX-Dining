@@ -11,4 +11,4 @@ You can visit our site using this link: <insert link>
 This project primarily uses Python, Flask, React.js, and other frontend tools to create a site that is easy to access and manage
 
 ## About the creaters of this site
-This site was created by current Purdue Computer Science students Mun Hong Fong, Isaac Stephan, Jonathon Maskew, and Juan Diaz
+This site was created by current Purdue Computer Science students Mun Hong Fong, Isaac Stephan, Jonathan Maskew, and Juan Diaz
