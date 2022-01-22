@@ -4,6 +4,7 @@ import datetime
 from flask_marshmallow import Marshmallow
 from flask_cors import CORS
 import json
+import db_manage
 import sqlite3
 
 app = Flask(__name__)
@@ -15,7 +16,7 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 ma = Marshmallow(app)
 
-class DiningCourt(db.Model):
+class DiningCourtTimeline(db.Model):
     id = db.Column(db.String(100), primary_key = True)
 
     date = db.Column(db.DateTime)
@@ -34,31 +35,51 @@ class DiningCourt(db.Model):
         self.ratings = ratings
         self.picture = picture
     
-class DiningCourtSchema(ma.Schema):
+class DiningCourtTimelineSchema(ma.Schema):
     class Meta:
         fields = ('id', 'date', 'court', 'food', 'meal_time', 'ratings', 'picture')
 
-dining_court_schema = DiningCourtSchema()
-dining_courts_schema = DiningCourtSchema(many=True)
+dining_court_timeline_schema = DiningCourtTimelineSchema()
+dining_courts_timeline_schema = DiningCourtTimelineSchema(many=True)
 
+
+@app.route('/get/<date_query>/<dining_court>', methods = ['GET'])
+def get_specific_day_foodList(date_query, dining_court):
+    date_query = datetime.datetime.strptime(date_query, "%m-%d-%Y")
+    diningday = DiningCourtTimeline.query.filter_by(date=date_query, court=dining_court)
+
+    reformatted_diningday = []
+    for data_food in dining_courts_timeline_schema.dump(diningday):
+        
+        print(data_food)
+        val = db_manage.populate_court_current_date(
+            data_food['date'], data_food['court'], data_food['food'], data_food['meal_time']
+        )
+        
+        reformatted_diningday.append(val)
+            
+    results = dining_courts_timeline_schema.dump(reformatted_diningday)
+
+    return jsonify(results)
 
 
 @app.route('/get/<court_query>', methods = ['GET'])
 def get_specific_dining_court(court_query):
-    all_dining = DiningCourt.query.filter_by(court=court_query)
-    results = dining_courts_schema.dump(all_dining)
+    all_dining = DiningCourtTimeline.query.filter_by(court=court_query)
+    results = dining_courts_timeline_schema.dump(all_dining)
     return jsonify(results)
+
 
 @app.route('/get/<id>', methods = ['GET'])
 def get_specific_food(id):
-    article = DiningCourt.query.get(id)
-    return dining_court_schema.jsonify(article)
+    article = DiningCourtTimeline.query.get(id)
+    return dining_court_timeline_schema.jsonify(article)
 
 
 @app.route('/get', methods = ['GET'])
 def get_all_food():
-    all_dining = DiningCourt.query.all()
-    results = dining_courts_schema.dump(all_dining)
+    all_dining = DiningCourtTimeline.query.all()
+    results = dining_courts_timeline_schema.dump(all_dining)
     return jsonify(results)
 
 
@@ -73,10 +94,10 @@ def add_dining():
     ratings = data['ratings']
     picture = data['picture']
 
-    dining = DiningCourt(date, court, food, meal_time, ratings, picture)
+    dining = DiningCourtTimeline(date, court, food, meal_time, ratings, picture)
     db.session.add(dining)
     db.session.commit()
-    return dining_court_schema.jsonify(dining)
+    return dining_court_timeline_schema.jsonify(dining)
 
 
 @app.route('/add_multi', methods = ['POST'])
@@ -85,24 +106,47 @@ def add_dining_multi():
 
     for data in data_list:
         date = data['date']
-        court = data['court']
-        food = data['food']
+        court = "".join([i.lower() for i in data['court'].split()])
+        food = "".join([i for i in data['food'].split()])     
         meal_time = data['meal_time']
         ratings = data['ratings']
         picture = data['picture']
 
         id = date + '.' + court + '.' + food
-        if not DiningCourt.query.get(id):
-            dining = DiningCourt(date, court, food, meal_time, ratings, picture)
+        if not DiningCourtTimeline.query.get(id):
+            dining = DiningCourtTimeline(date, court, food, meal_time, ratings, picture)
             db.session.add(dining)
             db.session.commit()
+
+    return jsonify({"Status": "OK"})
+
+@app.route('/add_dining_ratings', methods = ['POST'])
+def add_dining_ratings():
+    f = open('backend/dataFiles/dining_01-22-2022.json')
+    loaded_data = json.load(f)
+
+    count = 0
+    for val in loaded_data:
+        # print(val)
+        # if count == 10:
+        #     break
+        court = "".join([i.lower() for i in val['court'].split()])
+        food = "".join([i for i in val['food'].split()])        
+        db_manage.populate_db_ratings(
+            court,
+            food,
+            val['ratings'],
+            val.get('ratings_count', 0.0),
+            ""
+        )
+        count += 1
 
     return jsonify({"Status": "OK"})
 
 
 # @app.route('/update/<datetime>/', methods = ['PUT'])
 # def update_article(datetime):
-#     article = DiningCourt.query.get(datetime)
+#     article = DiningCourtTimeline.query.get(datetime)
 
 #     data = json.loads(request.data)
 #     title = data['title']
@@ -113,15 +157,15 @@ def add_dining_multi():
 
 #     db.session.commit()
 
-#     return dining_court_schema.jsonify(article)
+#     return dining_court_timeline_schema.jsonify(article)
 
 # @app.route('/delete/<datetime>/', methods = ['DELETE'])
 # def article_delete(datetime):
-#     article = DiningCourt.query.get(datetime)
+#     article = DiningCourtTimeline.query.get(datetime)
 #     db.session.delete(article)
 #     db.session.commit()
 
-#     return dining_court_schema.jsonify(article)
+#     return dining_court_timeline_schema.jsonify(article)
 
 
 if __name__ == "__main__":
