@@ -1,0 +1,16 @@
+[
+    {
+        "datetime": "2020-01-02",
+        "court": "wiley",
+        "food": "fries",
+        "mealtime": "dinner",
+        "ratings": 1
+    },
+    {
+        "datetime": "2020-01-03",
+        "court": "earhart",
+        "food": "here",
+        "mealtime": "breakfast",
+        "ratings": 2
+    }
+]
