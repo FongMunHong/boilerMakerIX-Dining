@@ -15,75 +15,113 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 ma = Marshmallow(app)
 
-class Articles(db.Model):
-    id = db.Column(db.Integer, primary_key = True)
+class DiningCourt(db.Model):
+    id = db.Column(db.String(100), primary_key = True)
 
-    title = db.Column(db.String(100))
-    body = db.Column(db.Text()) 
-    date = db.Column(db.DateTime, default=datetime.datetime.now)
+    date = db.Column(db.DateTime)
+    court = db.Column(db.String(100))
+    food = db.Column(db.String(100))
+    meal_time = db.Column(db.String(100))
+    ratings = db.Column(db.Float)
+    picture = db.Column(db.String(100))
 
-    def __init__(self, title, body):
-        self.title = title
-        self.body = body
-        
+    def __init__(self, date, court, food, meal_time, ratings, picture):
+        self.id = date + '.' + court + '.' + food
+        self.date = datetime.datetime.strptime(date, "%m-%d-%Y")
+        self.court = court
+        self.food = food
+        self.meal_time = meal_time
+        self.ratings = ratings
+        self.picture = picture
     
-class ArticleSchema(ma.Schema):
+class DiningCourtSchema(ma.Schema):
     class Meta:
-        fields = ('id', 'title', 'body', 'date')
+        fields = ('id', 'date', 'court', 'food', 'meal_time', 'ratings', 'picture')
 
-article_schema = ArticleSchema()
-articles_schema = ArticleSchema(many=True)
+dining_court_schema = DiningCourtSchema()
+dining_courts_schema = DiningCourtSchema(many=True)
 
 
+
+@app.route('/get/<court_query>', methods = ['GET'])
+def get_specific_dining_court(court_query):
+    all_dining = DiningCourt.query.filter_by(court=court_query)
+    results = dining_courts_schema.dump(all_dining)
+    return jsonify(results)
 
 @app.route('/get/<id>', methods = ['GET'])
-def post_details(id):
-    article = Articles.query.get(id)
-    return article_schema.jsonify(article)
+def get_specific_food(id):
+    article = DiningCourt.query.get(id)
+    return dining_court_schema.jsonify(article)
 
 
 @app.route('/get', methods = ['GET'])
-def get_articles():
-    # return jsonify({"Hello": "World"})
-    all_articles = Articles.query.all()
-    results = articles_schema.dump(all_articles)
+def get_all_food():
+    all_dining = DiningCourt.query.all()
+    results = dining_courts_schema.dump(all_dining)
     return jsonify(results)
 
 
 @app.route('/add', methods = ['POST'])
-def add_article():
+def add_dining():
     data = json.loads(request.data)
-    title = data['title']
-    body = data['body']
 
-    articles = Articles(title, body)
-    db.session.add(articles)
+    date = data['date']
+    court = data['court']
+    food = data['food']
+    meal_time = data['meal_time']
+    ratings = data['ratings']
+    picture = data['picture']
+
+    dining = DiningCourt(date, court, food, meal_time, ratings, picture)
+    db.session.add(dining)
     db.session.commit()
-    return article_schema.jsonify(articles)
+    return dining_court_schema.jsonify(dining)
 
 
-@app.route('/update/<id>/', methods = ['PUT'])
-def update_article(id):
-    article = Articles.query.get(id)
+@app.route('/add_multi', methods = ['POST'])
+def add_dining_multi():
+    data_list = json.loads(request.data)
 
-    data = json.loads(request.data)
-    title = data['title']
-    body = data['body']
+    for data in data_list:
+        date = data['date']
+        court = data['court']
+        food = data['food']
+        meal_time = data['meal_time']
+        ratings = data['ratings']
+        picture = data['picture']
 
-    article.title = title
-    article.body = body
+        id = date + '.' + court + '.' + food
+        if not DiningCourt.query.get(id):
+            dining = DiningCourt(date, court, food, meal_time, ratings, picture)
+            db.session.add(dining)
+            db.session.commit()
 
-    db.session.commit()
+    return jsonify({"Status": "OK"})
 
-    return article_schema.jsonify(article)
 
-@app.route('/delete/<id>/', methods = ['DELETE'])
-def article_delete(id):
-    article = Articles.query.get(id)
-    db.session.delete(article)
-    db.session.commit()
+# @app.route('/update/<datetime>/', methods = ['PUT'])
+# def update_article(datetime):
+#     article = DiningCourt.query.get(datetime)
 
-    return article_schema.jsonify(article)
+#     data = json.loads(request.data)
+#     title = data['title']
+#     body = data['body']
+
+#     article.title = title
+#     article.body = body
+
+#     db.session.commit()
+
+#     return dining_court_schema.jsonify(article)
+
+# @app.route('/delete/<datetime>/', methods = ['DELETE'])
+# def article_delete(datetime):
+#     article = DiningCourt.query.get(datetime)
+#     db.session.delete(article)
+#     db.session.commit()
+
+#     return dining_court_schema.jsonify(article)
 
 
 if __name__ == "__main__":

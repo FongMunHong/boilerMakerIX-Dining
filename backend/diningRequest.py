@@ -1,5 +1,7 @@
 import requests, json, datetime
 
+from parse import simplify_data
+
 locations = ["Wiley", "Ford", "Hillenbrand", "The Gathering Place", "Earhart", "Windsor"]
 url = "http://api.hfs.purdue.edu/menus/v2/locations/"
 header={"Accept":"application/json"}
@@ -17,10 +19,10 @@ def fetch_menu(location):
 
 
 def print_menu(location_json):
-    # print(location_json["Location"])
+    location = (location_json["Location"])
     mealjson = location_json["Meals"]
 
-    with open("dining.json", "w") as outfile:
+    with open("backend/dataFiles/dining" + location +".json", "w") as outfile:
         json.dump(mealjson, outfile)
 
     # for x in list(range(len(mealjson))):
@@ -36,10 +38,15 @@ def print_menu(location_json):
 def bitbar_main():
     print("🍴")
     print("---")
+    masterListOfDicts = []
     for location in locations:
         print(location)
         print_menu(fetch_menu(location))
-        break
+        simplify_data(location, masterListOfDicts)
+    with open("backend/dataFiles/newFormat.json", "w") as outfile:
+        json.dump(masterListOfDicts, outfile)            
+
+    
 
 
 bitbar_main()
