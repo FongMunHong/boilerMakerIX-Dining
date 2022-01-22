@@ -16,7 +16,9 @@ def simplify_data(location, masterList):
                 foodName = food['Name']
                 rating = random.uniform(1.0, 5.0)
                 rating = round(rating, 1)
-                masterList.append(dict(datetime = ftime, court = court, food = foodName, mealtime = mealTime, ratings = rating, picture = ""))
+                ratingsCount = random.uniform(1, 100)
+                ratingsCount = round(ratingsCount)
+                masterList.append(dict(datetime = ftime, court = court, food = foodName, mealtime = mealTime, ratings = rating, picture = "", ratings_count = ratingsCount))
 
     fileOpen.close()
     
