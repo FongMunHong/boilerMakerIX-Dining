@@ -3,18 +3,17 @@ import HomepageDataHandler from './homepageDataHandler'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import React, {useState, useEffect} from 'react';
 import FullMenuItem from './components/fullMenuItem';
-import FoodInfo from './foodInfo'
-
 
 function App() {
 
   const [articles, setArticles] = useState([])
 
   useEffect(() => {
-    fetch('http://127.0.0.1:5000/get/01-22-2022/wiley/top3', {
+    fetch("http://127.0.0.1:5000/get/01-22-2022/wiley/top3", {
       'methods':'GET',
       headers: {
-        'Content-Type':'application/json'
+        'Content-Type':'application/json',
+        'Access-Control-Allow-Origin': '*'
       }
     })
     .then(resp => resp.json())

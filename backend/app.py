@@ -1,3 +1,4 @@
+import resource
 from flask import Flask, jsonify, request
 from flask_sqlalchemy import SQLAlchemy
 import datetime
@@ -78,8 +79,10 @@ def get_specific_day_foodList_top3(date_query, dining_court):
     reformatted_diningday = sorted(reformatted_diningday, key = lambda i: i['ratings'], reverse=True)[:3]
             
     results = dining_courts_timeline_schema.dump(reformatted_diningday)
+    response = jsonify(results)
+    response.headers.add('Access-Control-Allow-Origin', '*')
 
-    return jsonify(results)
+    return response
 
 
 @app.route('/get/<court_query>', methods = ['GET'])
