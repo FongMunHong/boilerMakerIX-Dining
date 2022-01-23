@@ -78,6 +78,24 @@ def populate_db_ratings(court, food, ratings, ratings_count, picture):
 
     return
 
+def update_ratings(court, food, ratings):
+
+    id = court + '.' + food
+    if DiningRatingHist.query.get(id):
+        diningFood = DiningRatingHist.query.get(id)
+        temp_ratings_count = diningFood.ratings_count
+        
+        print (diningFood.ratings * temp_ratings_count)
+        
+
+        avg_ratings = ((diningFood.ratings * temp_ratings_count) + ratings) / (temp_ratings_count + 1)
+        diningFood.ratings = round(avg_ratings, 1)
+        diningFood.ratings_count += 1
+
+        db.session.commit()
+
+        return diningFood
+
 
 
 if __name__ == "__main__":

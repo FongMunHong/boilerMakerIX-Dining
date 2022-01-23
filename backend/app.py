@@ -141,7 +141,7 @@ def add_dining_multi():
 
 @app.route('/add_dining_ratings', methods = ['POST'])
 def add_dining_ratings():
-    f = open('backend/dataFiles/dining_01-22-2022.json')
+    f = open('backend/dataFiles/dining_01-22-2022PRO.json')
     loaded_data = json.load(f)
 
     count = 0
@@ -156,11 +156,36 @@ def add_dining_ratings():
             food,
             val['ratings'],
             val.get('ratings_count', 0.0),
-            ""
+            val['picture']
         )
         count += 1
 
     return jsonify({"Status": "OK"})
+
+@app.route('/update_ratings', methods = ['POST'])
+def update_dining_ratings():
+    # Sample data
+    # {
+    #     "date": "01-22-2022",
+    #     "court": "Wiley",
+    #     "food": "Scrambled Eggs",
+    #     "meal_time": "Breakfast",
+    #     "ratings": 4.3,
+    #     "picture": "",
+    #     "ratings_count": 11
+    # }
+
+    val = json.loads(request.data)
+    
+    if not val:
+        return jsonify({"Status": "No data"})
+
+    court = "".join([i.lower() for i in val['court'].split()])
+    food = "".join([i for i in val['food'].split()]) 
+
+    val = db_manage.update_ratings(court, food, val['ratings'])
+
+    return dining_court_timeline_schema.jsonify(val)
 
 
 # @app.route('/update/<datetime>/', methods = ['PUT'])
