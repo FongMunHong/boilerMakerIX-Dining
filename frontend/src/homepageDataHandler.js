@@ -1,5 +1,8 @@
 import React, { Component } from 'react';
-import HomepageFeatures from './components/homepageFeatures';
+import WileyFeatures from './components/wileyFeatures';
+import EarhartFeatures from './components/earhartFeatures';
+import FordFeatures from './components/fordFeatures'
+import TheGatheringPlaceFeatures from './components/theGatheringPlaceFeatures'
 import 'bootstrap/dist/css/bootstrap.min.css';
 //import FoodInfo from './components/foodInfo'
 
@@ -54,11 +57,10 @@ class HomepageDataHandler extends Component {
 
                 <div className="container-fluid">
                     <div className="row row-cols-1 gy-3">
-                        <div className="col"><HomepageFeatures diningHallName="Wiley" foodData={this.props.wileyData}></HomepageFeatures></div>
-                        <div className="col"><HomepageFeatures diningHallName="Windsor" foodData={<div></div>}></HomepageFeatures></div>
-                        <div className="col"><HomepageFeatures diningHallName="Ford" foodData={<div></div>}></HomepageFeatures></div>
-                        <div className="col"><HomepageFeatures diningHallName="Earhart" foodData={<div></div>}></HomepageFeatures></div>
-                        <div className="col"><HomepageFeatures diningHallName="Hillenbrand" foodData={<div></div>}></HomepageFeatures></div>
+                        <div className="col"><WileyFeatures diningHallName="Wiley" foodData={this.props.wileyData}></WileyFeatures></div>
+                        <div className="col"><EarhartFeatures diningHallName="Earhart" foodData={<div></div>}></EarhartFeatures></div>
+                        <div className="col"><FordFeatures diningHallName="Ford" foodData={<div></div>}></FordFeatures></div>
+                        <div className="col"><TheGatheringPlaceFeatures diningHallName="Hillenbrand" foodData={<div></div>}></TheGatheringPlaceFeatures></div>
                     </div>
                 </div>
 

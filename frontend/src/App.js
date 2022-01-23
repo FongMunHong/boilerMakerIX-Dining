@@ -31,8 +31,6 @@ function App() {
         hillenbrandData={articles.filter(c => c.court === 'hillenbrand')}
       >
       </HomepageDataHandler>
-
-      <FullMenuItem />
     </React.Fragment>
   );
 }
