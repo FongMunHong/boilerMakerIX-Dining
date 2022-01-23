@@ -25,7 +25,7 @@ class DiningRatingHist(db.Model):
     picture = db.Column(db.String(100))
 
     def __init__(self, court, food, ratings, ratings_count, picture):
-        self.id = court + '.' + food
+        self.id = court + '.' + "".join([i for i in food.split()])
         self.court = court
         self.food = food
         self.ratings = ratings
@@ -68,11 +68,11 @@ def populate_court_current_date(date, court, food, meal_time):
     return foodRatings
 
 
-def populate_db_ratings(court, food, ratings, ratings_count, picture):
+def populate_db_ratings(court, foodid, foodori, ratings, ratings_count, picture):
     
-    id = court + '.' + food
+    id = court + '.' + foodid
     if not DiningRatingHist.query.get(id):
-        diningRating = DiningRatingHist(court, food, ratings, ratings_count, picture)
+        diningRating = DiningRatingHist(court, foodori, ratings, ratings_count, picture)
         db.session.add(diningRating)
         db.session.commit()
 

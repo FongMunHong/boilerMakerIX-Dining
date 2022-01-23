@@ -150,10 +150,12 @@ def add_dining_ratings():
         # if count == 10:
         #     break
         court = "".join([i.lower() for i in val['court'].split()])
-        food = "".join([i for i in val['food'].split()])        
+        foodid = "".join([i for i in val['food'].split()])        
+        foodori = val['food']
         db_manage.populate_db_ratings(
             court,
-            food,
+            foodid,
+            foodori,
             val['ratings'],
             val.get('ratings_count', 0.0),
             val['picture']
