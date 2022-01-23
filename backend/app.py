@@ -59,8 +59,12 @@ def get_specific_day_foodList(date_query, dining_court):
         reformatted_diningday.append(val)
             
     results = dining_courts_timeline_schema.dump(reformatted_diningday)
+    response = jsonify(results)
+    response.headers.add('Access-Control-Allow-Origin', '*')
 
-    return jsonify(results)
+    print(response)
+
+    return response
 
 @app.route('/get/<date_query>/<dining_court>/top3', methods = ['GET'])
 def get_specific_day_foodList_top3(date_query, dining_court):
@@ -144,7 +148,7 @@ def add_dining_multi():
 
 @app.route('/add_dining_ratings', methods = ['POST'])
 def add_dining_ratings():
-    f = open('backend/dataFiles/dining_01-22-2022.json')
+    f = open('backend/dataFiles/dining_01-22-2022PRO.json')
     loaded_data = json.load(f)
 
     count = 0
@@ -153,17 +157,44 @@ def add_dining_ratings():
         # if count == 10:
         #     break
         court = "".join([i.lower() for i in val['court'].split()])
-        food = "".join([i for i in val['food'].split()])        
+        foodid = "".join([i for i in val['food'].split()])        
+        foodori = val['food']
         db_manage.populate_db_ratings(
             court,
-            food,
+            foodid,
+            foodori,
             val['ratings'],
             val.get('ratings_count', 0.0),
-            ""
+            val['picture']
         )
         count += 1
 
     return jsonify({"Status": "OK"})
+
+@app.route('/update_ratings', methods = ['POST'])
+def update_dining_ratings():
+    # Sample data
+    # {
+    #     "date": "01-22-2022",
+    #     "court": "Wiley",
+    #     "food": "Scrambled Eggs",
+    #     "meal_time": "Breakfast",
+    #     "ratings": 4.3,
+    #     "picture": "",
+    #     "ratings_count": 11
+    # }
+
+    val = json.loads(request.data)
+    
+    if not val:
+        return jsonify({"Status": "No data"})
+
+    court = "".join([i.lower() for i in val['court'].split()])
+    food = "".join([i for i in val['food'].split()]) 
+
+    val = db_manage.update_ratings(court, food, val['ratings'])
+
+    return dining_court_timeline_schema.jsonify(val)
 
 
 # @app.route('/update/<datetime>/', methods = ['PUT'])
