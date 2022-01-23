@@ -8,8 +8,8 @@ class FoodInfo extends Component {
         <div className="card border-secondary" style={{ borderRadius: "30px" }}>
           <div className="card-body">
             <img src="" className="card-img-top" alt="..." />
-            <h6 className="card-text">Popcorn Shrimp</h6>
-            <p className="card-text">3.2</p>
+            <h6 className="card-text">{}</h6>
+            <p className="card-text text-muted">average</p>
           </div>
         </div>
       </React.Fragment>

@@ -31,13 +31,13 @@ class HomepageFeatures extends React.Component {
             <div className="container-fluid">
               <div className="row row-cols-4">
                 <div className="col">
-                  <FoodInfo />
+                  <FoodInfo></FoodInfo>
                 </div>
                 <div className="col">
-                  <FoodInfo />
+                  <FoodInfo></FoodInfo>
                 </div>
                 <div className="col">
-                  <FoodInfo />
+                  <FoodInfo></FoodInfo>
                 </div>
                 <div className="col">
                   <div
@@ -51,7 +51,7 @@ class HomepageFeatures extends React.Component {
                         alt="..."
                       />
                       <h6 className="card-text">Full Menu</h6>
-                      <p className="card-text">and leave reviews</p>
+                      <p className="card-text text-muted">and leave reviews</p>
                     </div>
                   </div>
                 </div>

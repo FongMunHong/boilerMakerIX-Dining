@@ -13,27 +13,16 @@ class FullMenuItem extends React.Component {
   render() {
     return (
       <React.Fragment>
-        <div class="card">
-          <img src="..." class="food-img" alt="img-of-food" />
-          <div class="card-body">
-            <h5 class="food-name">Food Name</h5>
-            <p class="food-rating">
+        <div
+          className="card shadow mb-3 ms-3 me-3 p-3"
+          style={{ borderRadius: "30px" }}
+        >
+          <img src="..." className="food-img" alt="img-of-food" />
+          <div className="card-body">
+            <h5 className="food-name">Food Name</h5>
+            <p className="food-rating">
               This will be some sort of rating thing, not a p tag I hope
             </p>
-          </div>
-        </div>
-
-        <div class="card">
-          <img src="..." class="card-img-start" alt="..." />
-          <div class="card-body">
-            <h5 class="card-title">Card title</h5>
-            <p class="card-text">
-              Some quick example text to build on the card title and make up the
-              bulk of the card's content.
-            </p>
-            <a href="#" class="btn btn-primary">
-              Go somewhere
-            </a>
           </div>
         </div>
       </React.Fragment>
