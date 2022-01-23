@@ -58,8 +58,12 @@ def get_specific_day_foodList(date_query, dining_court):
         reformatted_diningday.append(val)
             
     results = dining_courts_timeline_schema.dump(reformatted_diningday)
+    response = jsonify(results)
+    response.headers.add('Access-Control-Allow-Origin', '*')
 
-    return jsonify(results)
+    print(response)
+
+    return response
 
 @app.route('/get/<date_query>/<dining_court>/top3', methods = ['GET'])
 def get_specific_day_foodList_top3(date_query, dining_court):
@@ -79,7 +83,10 @@ def get_specific_day_foodList_top3(date_query, dining_court):
             
     results = dining_courts_timeline_schema.dump(reformatted_diningday)
 
-    return jsonify(results)
+    response = jsonify(results)
+    response.headers.add('Access-Control-Allow-Origin', '*')
+    
+    return response
 
 
 @app.route('/get/<court_query>', methods = ['GET'])
